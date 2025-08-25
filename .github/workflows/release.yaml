@@ -1,5 +1,3 @@
-
-
 name: Release to PyPI
 
 on:
@@ -55,6 +53,9 @@ jobs:
 
   github-release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     needs: get-version
     steps:
       - name: Checkout code
