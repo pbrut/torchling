@@ -72,9 +72,7 @@ jobs:
           else
             git log $PREV_TAG..HEAD --pretty=format:"* %s" > commits.txt
           fi
-          echo 'body<<EOF' >> $GITHUB_OUTPUT
-          cat commits.txt >> $GITHUB_OUTPUT
-          echo 'EOF' >> $GITHUB_OUTPUT
+          echo "body=$(cat commits.txt | sed ':a;N;$!ba;s/\n/\\n/g')" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
