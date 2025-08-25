@@ -25,3 +25,10 @@ class Tanh(Activation):
 
     def __call__(self, x):
         return x.tanh()
+    
+class Relu(Activation):
+    def __init__(self):
+        super().__init__()
+
+    def __call__(self, x):
+        return x.relu()

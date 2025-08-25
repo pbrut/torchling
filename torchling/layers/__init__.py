@@ -1,1 +1,1 @@
-from .layers import Linear, Activation, Tanh
+from .layers import Linear, Activation, Tanh, Relu
