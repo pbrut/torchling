@@ -38,7 +38,7 @@ class Sequential:
                 x = layer(x)
         return x.data[0]
     
-    def train(self, X, Y, optimizer, loss_fn, epochs=100):
+    def train(self, X, Y, optimizer, loss_fn, epochs=100, print_every=50):
         optimizer.model = self
         for epoch in range(epochs):
             logits = self(X.T)
@@ -47,5 +47,5 @@ class Sequential:
             loss.backward()
             optimizer.step()
             
-            if epoch % 50 == 0:
+            if epoch % print_every == 0:
                 print(f"(Epoch {epoch}) Loss: {loss.data}")
