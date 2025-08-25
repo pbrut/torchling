@@ -29,4 +29,4 @@ dependencies = [
 "Repository" = "https://github.com/pbrut/torchling"
 
 [tool.setuptools.packages.find]
-where = ["torchling"]
+include = ["torchling*"]
