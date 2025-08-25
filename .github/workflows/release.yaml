@@ -62,11 +62,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Generate changelog from commits
+        id: changelog
+        run: |
+          git fetch --tags
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -z "$PREV_TAG" ]; then
+            git log --pretty=format:"* %s" > commits.txt
+          else
+            git log $PREV_TAG..HEAD --pretty=format:"* %s" > commits.txt
+          fi
+          echo 'body<<EOF' >> $GITHUB_OUTPUT
+          cat commits.txt >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ needs.get-version.outputs.version }}
           name: Release v${{ needs.get-version.outputs.version }}
-          body_path: CHANGELOG.md
+          body: ${{ steps.changelog.outputs.body }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
