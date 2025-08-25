@@ -10,7 +10,7 @@ description = "A minimal deep learning library using numpy."
 readme = "README.md"
 requires-python = ">=3.8"
 authors = [
-  { name="Piotr Brutkowski", email="piotr@brutkowski.net" }
+  { name="Piotr Brutkowski", email="piotrbrutkowski@yahoo.com" }
 ]
 license = { file = "LICENSE" }
 classifiers = [
