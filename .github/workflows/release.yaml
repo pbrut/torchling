@@ -81,5 +81,8 @@ jobs:
           tag_name: v${{ needs.get-version.outputs.version }}
           name: Release v${{ needs.get-version.outputs.version }}
           body: ${{ steps.changelog.outputs.body }}
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
