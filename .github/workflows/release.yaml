@@ -4,11 +4,8 @@ on:
   push:
     branches:
       - main
-    tags:
-      - 'v*'
 
 jobs:
-
   build-and-publish:
     runs-on: ubuntu-latest
     environment:
@@ -38,6 +35,8 @@ jobs:
 
   get-version:
     runs-on: ubuntu-latest
+    environment:
+      name: release
     needs: build-and-publish
     outputs:
       version: ${{ steps.get_version.outputs.version }}
@@ -53,6 +52,8 @@ jobs:
 
   github-release:
     runs-on: ubuntu-latest
+    environment:
+      name: release
     permissions:
       contents: write
       pull-requests: write
@@ -66,5 +67,6 @@ jobs:
         with:
           tag_name: v${{ needs.get-version.outputs.version }}
           name: Release v${{ needs.get-version.outputs.version }}
+          body_path: CHANGELOG.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
