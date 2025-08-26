@@ -77,22 +77,35 @@ jobs:
       - name: Generate changelog from commits
         id: changelog
         run: |
-          git fetch --prune --unshallow --tags
+          set -euo pipefail
+
+          # ensure we have tags/history
+          git fetch --prune --unshallow --tags || true
+
+          # find previous tag
           PREV_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
           REPO_URL="https://github.com/${GITHUB_REPOSITORY}"
 
           if [ -z "$PREV_TAG" ]; then
-            COMMITS=$(git log --pretty=format:"* [%h]($REPO_URL/commit/%H) %s")
+            git log --pretty=format:"* [%h]($REPO_URL/commit/%H) %s" > commits.txt
           else
-            COMMITS=$(git log $PREV_TAG..HEAD --pretty=format:"* [%h]($REPO_URL/commit/%H) %s")
+            git log "$PREV_TAG"..HEAD --pretty=format:"* [%h]($REPO_URL/commit/%H) %s" > commits.txt
           fi
 
-          BODY=""
-          while IFS= read -r line; do
-            BODY="${BODY}${line}\n"
-          done <<< "$COMMITS"
+          # Ensure file ends with a newline (important for the runner to match the closing delimiter)
+          sed -e '$a\' commits.txt > commits_nl.txt
 
-          echo "body=$BODY" >> $GITHUB_OUTPUT
+          # Use an unlikely delimiter (timestamp nanos) to avoid accidental matches
+          DELIM="CHANGELOG_DELIM_$(date +%s%N)"
+
+          # Write a true multiline output to $GITHUB_OUTPUT
+          echo "body<<${DELIM}" >> "$GITHUB_OUTPUT"
+          cat commits_nl.txt >> "$GITHUB_OUTPUT"
+          echo "${DELIM}" >> "$GITHUB_OUTPUT"
+
+          # optional: also export a short single-line output (number of commits)
+          echo "commits_count=$(wc -l < commits_nl.txt)" >> "$GITHUB_OUTPUT"
+
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
