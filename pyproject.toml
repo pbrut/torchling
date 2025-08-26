@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "torchling"
-version = "0.1.18"
+version = "1.0.0"
 description = "A minimal deep learning library using numpy."
 readme = "README.md"
 requires-python = ">=3.8"
@@ -21,7 +21,7 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Artificial Intelligence"
 ]
 dependencies = [
-  "numpy>=2.3.1"
+  "numpy>=1.26.4"
 ]
 
 [project.urls]
