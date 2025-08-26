@@ -1,6 +1,6 @@
 # torchling
 
-A minimal neural network library. `torchling` is a work in progress.
+A minimal neural network library. `torchling` is a work in progress. 
 
 ## Installation
 ```bash
