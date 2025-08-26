@@ -78,14 +78,20 @@ jobs:
         id: changelog
         run: |
           git fetch --tags
-          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          # Get the latest tag reachable from HEAD
+          PREV_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
           REPO_URL="https://github.com/${GITHUB_REPOSITORY}"
+          
           if [ -z "$PREV_TAG" ]; then
+            # If no previous tag exists, include all commits
             git log --pretty=format:"* [%h]($REPO_URL/commit/%H) %s" > commits.txt
           else
+            # Include all commits since the previous tag
             git log $PREV_TAG..HEAD --pretty=format:"* [%h]($REPO_URL/commit/%H) %s" > commits.txt
           fi
+          
           echo "body=$(cat commits.txt | sed ':a;N;$!ba;s/\n/\\n/g')" >> $GITHUB_OUTPUT
+
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
