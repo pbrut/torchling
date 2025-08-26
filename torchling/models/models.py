@@ -36,16 +36,30 @@ class Sequential:
         with np.errstate(divide='ignore', invalid='ignore'):
             for layer in self.layers:
                 x = layer(x)
-        return x.data[0]
+        return x.data
     
-    def train(self, X, Y, optimizer, loss_fn, epochs=100, print_every=50):
-        optimizer.model = self
-        for epoch in range(epochs):
-            logits = self(X.T)
-            loss = loss_fn(logits, Y)
+    def load_data(self, batch_size, X, Y, shuffle=True):
+        num_examples = X.shape[0]
+        
+        if shuffle:
+            idx = np.random.permutation(num_examples)
+            X = X[idx]
+            Y = Y[idx]
 
-            loss.backward()
-            optimizer.step()
+        for i in range(0, num_examples, batch_size):
+            X_batch = X[i:i+batch_size]
+            Y_batch = Y[i:i+batch_size]
+            yield X_batch, Y_batch
+    
+    def train(self, X, Y, optimizer, loss_fn, epochs=100, batch_size=128, print_every=50):
+        optimizer.model = self
+        for epoch in range(1, epochs+1):
+            for X_batch, Y_batch in self.load_data(batch_size, X, Y):
+                logits = self(X_batch.T)
+                loss = loss_fn(logits, Y_batch.T)
+
+                loss.backward()
+                optimizer.step()
             
             if epoch % print_every == 0:
                 print(f"(Epoch {epoch}) Loss: {loss.data}")
