@@ -136,11 +136,13 @@ class Tensor:
     
     def cce(self, Y):
         # Y is one-hot encoded
+
+        # TODO: For numerical stability, make CCE take logits as input instead of probabilities.
         eps = 1e-12
-        logits = np.clip(self.data, eps, 1. - eps)
-        loss = -np.sum(Y * np.log(logits)) / logits.shape[1]
+        probabilities = np.clip(self.data, eps, 1. - eps)
+        loss = -np.sum(Y * np.log(probabilities)) / probabilities.shape[1]
         out = Tensor(np.array(loss), parents=(self,), operation='cce')
         def _backward():
-            self.grad += (-Y / logits) / logits.shape[1] * out.grad
+            self.grad += (-Y / probabilities) / probabilities.shape[1] * out.grad
         out._backward = _backward
         return out

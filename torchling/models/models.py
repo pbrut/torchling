@@ -55,8 +55,8 @@ class Sequential:
         optimizer.model = self
         for epoch in range(1, epochs+1):
             for X_batch, Y_batch in self.data_loader(batch_size, X, Y):
-                logits = self(X_batch.T)
-                loss = loss_fn(logits, Y_batch.T)
+                probabilities = self(X_batch.T)
+                loss = loss_fn(probabilities, Y_batch.T)
 
                 loss.backward()
                 optimizer.step()
