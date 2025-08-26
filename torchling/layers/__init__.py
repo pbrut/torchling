@@ -1,1 +1,1 @@
-from .layers import Linear, Activation, Tanh, Relu, Softmax
+from .layers import Linear, Activation, Tanh, Relu, Softmax, Sigmoid

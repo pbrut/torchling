@@ -39,3 +39,10 @@ class Softmax(Activation):
 
     def __call__(self, x):
         return x.softmax()
+
+class Sigmoid(Activation):
+    def __init__(self):
+        super().__init__()
+
+    def __call__(self, x):
+        return x.sigmoid()
