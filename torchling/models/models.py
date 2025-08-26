@@ -38,9 +38,9 @@ class Sequential:
                 x = layer(x)
         return x.data
     
-    def load_data(self, batch_size, X, Y, shuffle=True):
+    def data_loader(self, batch_size, X, Y, shuffle=True):
         num_examples = X.shape[0]
-        
+
         if shuffle:
             idx = np.random.permutation(num_examples)
             X = X[idx]
@@ -54,7 +54,7 @@ class Sequential:
     def train(self, X, Y, optimizer, loss_fn, epochs=100, batch_size=128, print_every=50):
         optimizer.model = self
         for epoch in range(1, epochs+1):
-            for X_batch, Y_batch in self.load_data(batch_size, X, Y):
+            for X_batch, Y_batch in self.data_loader(batch_size, X, Y):
                 logits = self(X_batch.T)
                 loss = loss_fn(logits, Y_batch.T)
 

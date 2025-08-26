@@ -79,10 +79,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          # ensure we have tags/history
           git fetch --prune --unshallow --tags || true
-
-          # find previous tag
           PREV_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
           REPO_URL="https://github.com/${GITHUB_REPOSITORY}"
 
@@ -92,20 +89,15 @@ jobs:
             git log "$PREV_TAG"..HEAD --pretty=format:"* [%h]($REPO_URL/commit/%H) %s" > commits.txt
           fi
 
-          # Ensure file ends with a newline (important for the runner to match the closing delimiter)
           sed -e '$a\' commits.txt > commits_nl.txt
 
-          # Use an unlikely delimiter (timestamp nanos) to avoid accidental matches
           DELIM="CHANGELOG_DELIM_$(date +%s%N)"
 
-          # Write a true multiline output to $GITHUB_OUTPUT
           echo "body<<${DELIM}" >> "$GITHUB_OUTPUT"
           cat commits_nl.txt >> "$GITHUB_OUTPUT"
           echo "${DELIM}" >> "$GITHUB_OUTPUT"
 
-          # optional: also export a short single-line output (number of commits)
           echo "commits_count=$(wc -l < commits_nl.txt)" >> "$GITHUB_OUTPUT"
-
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
