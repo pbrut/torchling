@@ -1,1 +1,1 @@
-from .losses import MSE
+from .losses import MSE, CCE

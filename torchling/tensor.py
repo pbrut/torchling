@@ -58,10 +58,19 @@ class Tensor:
         def _backward():
             if len(self.parents) != 0:
                 self.grad += (1.0 / other.data) * out.grad
-
             if len(other.parents) != 0:
                 other.grad += (-self.data / (other.data ** 2)) * out.grad
+        out._backward = _backward
+        return out
 
+    def softmax(self):
+        exp_data = np.exp(self.data - np.max(self.data, axis=0, keepdims=True))
+        softmax_data = exp_data / np.sum(exp_data, axis=0, keepdims=True)
+        out = Tensor(softmax_data, parents=(self,), operation='softmax')
+        def _backward():
+            s = out.data  # shape: (num_classes, batch_size)
+            grad = s * (out.grad - np.sum(out.grad * s, axis=0, keepdims=True))
+            self.grad += grad
         out._backward = _backward
         return out
 
@@ -122,5 +131,16 @@ class Tensor:
         out = Tensor(np.array(self.data.mean()), parents=(self,), operation='mean')
         def _backward():
             self.grad += (1.0 / n) * np.ones_like(self.data) * out.grad
+        out._backward = _backward
+        return out
+    
+    def cce(self, Y):
+        # Y is one-hot encoded
+        eps = 1e-12
+        logits = np.clip(self.data, eps, 1. - eps)
+        loss = -np.sum(Y * np.log(logits)) / logits.shape[1]
+        out = Tensor(np.array(loss), parents=(self,), operation='cce')
+        def _backward():
+            self.grad += (-Y / logits) / logits.shape[1] * out.grad
         out._backward = _backward
         return out
