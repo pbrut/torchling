@@ -77,20 +77,25 @@ jobs:
       - name: Generate changelog from commits
         id: changelog
         run: |
-          git fetch --tags
-          # Get the latest tag reachable from HEAD
+          # Fetch all commits and tags
+          git fetch --prune --unshallow --tags
+
+          # Find the latest tag
           PREV_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+
           REPO_URL="https://github.com/${GITHUB_REPOSITORY}"
-          
+
           if [ -z "$PREV_TAG" ]; then
-            # If no previous tag exists, include all commits
+            # No previous tag, include all commits
             git log --pretty=format:"* [%h]($REPO_URL/commit/%H) %s" > commits.txt
           else
             # Include all commits since the previous tag
             git log $PREV_TAG..HEAD --pretty=format:"* [%h]($REPO_URL/commit/%H) %s" > commits.txt
           fi
-          
+
+          # Save changelog to GitHub output
           echo "body=$(cat commits.txt | sed ':a;N;$!ba;s/\n/\\n/g')" >> $GITHUB_OUTPUT
+
 
 
       - name: Create GitHub Release
