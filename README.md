@@ -10,35 +10,35 @@ pip install torchling
 
 ## Initial Roadmap
 
-- Reverse-mode automatic differentiation
-    - ✅ Basic arithmetic operations
-    - ✅ Matrix multiplication
-- Layers 
-    - ✅ Linear
-    - [ ] Convolutional (2D)
-    - [ ] Batch normalisation
-    - ✅ Softmax
-    - ✅ Relu
-    - ✅ Sigmoid
-    - ✅ Tanh
-- Models
-    - ✅ Sequential
-    - [ ] Decoder-only Transformer
-- Losses
-    - ✅ Mean Squared Error
-    - ✅ Categorical Cross-Entropy
-- Optimisers
-    - ✅ Stochastic gradient descent
-    - [ ] Adam
-- Weight initialisation
-    - ✅ Drawn from normal distribution
-    - [ ] Xavier/Glorot initialisation
-- Regularisation
-    - [ ] L1
-    - [ ] L2
-    - [ ] Dropout
-- Miscellaneous
-    - [ ] Skip connections
+- Reverse-mode automatic differentiation  
+  ✅ Basic arithmetic operations  
+  ✅ Matrix multiplication  
+- Layers  
+  ✅ Linear  
+  ⬜ Convolutional (2D)  
+  ⬜ Batch normalisation  
+  ✅ Softmax  
+  ✅ Relu  
+  ✅ Sigmoid  
+  ✅ Tanh  
+- Models  
+  ✅ Sequential  
+  ⬜ Decoder-only Transformer  
+- Losses  
+  ✅ Mean Squared Error  
+  ✅ Categorical Cross-Entropy  
+- Optimisers  
+  ✅ Stochastic gradient descent  
+  ⬜ Adam  
+- Weight initialisation  
+  ✅ Drawn from normal distribution  
+  ⬜ Xavier/Glorot initialisation  
+- Regularisation  
+  ⬜ L1  
+  ⬜ L2  
+  ⬜ Dropout  
+- Miscellaneous  
+  ⬜ Skip connections
 
 ## Example
 Simple example of training on the MNIST dataset. 
@@ -86,8 +86,8 @@ optimizer = SGD(alpha=lr)
 loss = CCE()
 model.train(X, Y, optimizer, loss, epochs=epochs, batch_size=batch_size, print_every=print_every)
 
-probabilities = model.predict(X_test)
-prediction = np.argmax(probabilities, axis=0)
+output = model.predict(X_test)
+prediction = np.argmax(output, axis=0)
 
 accuracy = np.mean(prediction == Y_test)
 print(f"Prediction accuracy: {accuracy * 100:.2f}%")
