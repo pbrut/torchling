@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'torchling/**'
 
 jobs:
   build-and-publish:
