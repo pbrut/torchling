@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 
 [project]
@@ -8,7 +8,7 @@ name = "torchling"
 version = "1.0.0"
 description = "A minimal deep learning library using numpy."
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 authors = [
   { name="Piotr Brutkowski", email="piotrbrutkowski@yahoo.com" }
 ]
@@ -28,5 +28,5 @@ dependencies = [
 "Homepage" = "https://github.com/pbrut/torchling"
 "Repository" = "https://github.com/pbrut/torchling"
 
-[tool.setuptools.packages.find]
-include = ["torchling*"]
+[tool.hatch.build.targets.wheel]
+packages = ["torchling"]
